@@ -18,3 +18,15 @@ def test_reopen_task():
     t.close()
     t.reopen()
     assert t.status == "open"
+
+
+def test_invalid_status_raises():
+    import pytest
+    with pytest.raises(ValueError, match="Invalid status"):
+        Task(title="Bad", status="unknown")
+
+
+def test_start_task():
+    t = Task(title="Work item")
+    t.start()
+    assert t.status == "in_progress"
