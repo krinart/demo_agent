@@ -43,3 +43,30 @@ def test_filter_tasks_by_predicate():
     result = p.filter_tasks(predicate=lambda t: "bug" in t.title.lower())
     assert len(result) == 1
     assert result[0].title == "Important bug"
+
+
+def test_empty_project_name_raises():
+    import pytest
+    with pytest.raises(ValueError, match="cannot be empty"):
+        Project(name="")
+
+
+def test_whitespace_project_name_raises():
+    import pytest
+    with pytest.raises(ValueError, match="cannot be empty"):
+        Project(name="   ")
+
+
+def test_project_name_stripped():
+    p = Project(name="  My Project  ")
+    assert p.name == "My Project"
+
+
+def test_summary():
+    p = Project(name="Demo")
+    p.add_task(Task(title="Open task"))
+    t2 = Task(title="Done task")
+    t2.close()
+    p.add_task(t2)
+    assert p.summary() == "Project(Demo, 1 open / 2 total)"
+    assert str(p) == p.summary()
