@@ -23,3 +23,23 @@ def test_get_open_tasks():
     p.add_task(t2)
     assert len(p.get_open_tasks()) == 1
     assert len(p.get_closed_tasks()) == 1
+
+
+def test_filter_tasks_by_status():
+    p = Project(name="Demo")
+    p.add_task(Task(title="A"))
+    p.add_task(Task(title="B"))
+    t3 = Task(title="C")
+    t3.close()
+    p.add_task(t3)
+    assert len(p.filter_tasks(status="open")) == 2
+    assert len(p.filter_tasks(status="closed")) == 1
+
+
+def test_filter_tasks_by_predicate():
+    p = Project(name="Demo")
+    p.add_task(Task(title="Important bug"))
+    p.add_task(Task(title="Minor tweak"))
+    result = p.filter_tasks(predicate=lambda t: "bug" in t.title.lower())
+    assert len(result) == 1
+    assert result[0].title == "Important bug"
