@@ -11,11 +11,6 @@ class Project:
     name: str
     tasks: list[Task] = field(default_factory=list)
 
-    def __post_init__(self):
-        if not self.name or not self.name.strip():
-            raise ValueError("Project name cannot be empty")
-        self.name = self.name.strip()
-
     def add_task(self, task: Task):
         self.tasks.append(task)
 
@@ -38,10 +33,5 @@ class Project:
     def get_closed_tasks(self):
         return self.filter_tasks(status="closed")
 
-    def summary(self) -> str:
-        """Return a summary including open task count."""
-        open_count = len(self.filter_tasks(status="open"))
-        return f"Project({self.name}, {open_count} open / {len(self.tasks)} total)"
-
     def __str__(self):
-        return self.summary()
+        return f"Project({self.name}, {len(self.tasks)} tasks)"
